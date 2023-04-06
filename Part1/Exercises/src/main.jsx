@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
-const Hello = (props) => {
-  return (
-    <p>
-      Hello {props.name}, you are {props.age} years old
-    </p>
-  );
-};
+const Display = ({ counter }) => <div>{counter}</div>;
+
+const Button = (handleClick, text) => (
+  <button onClick={handleClick}>{text}</button>
+);
 
 const App = () => {
-  const name = "Jesús";
-  const age = 10;
+  const [counter, setCounter] = useState(0);
+  const increaseByOne = () => setCounter(counter + 1);
+  const setToZero = () => setCounter(0);
+  const decreaseByOne = () => setCounter(counter - 1);
+
   return (
     <div>
-      <h1>Greeting</h1>
-      <Hello name={name} age={age} />
-      <Hello name="Juan" age={12 + 20} />
+      <Display counter={counter} />
+      <Button handleClick={increaseByOne} text="plus" />
+      <Button handleClick={setToZero} text="zero" />
+      <Button handleClick={decreaseByOne} text="minus" />
     </div>
   );
 };
@@ -26,4 +28,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </React.StrictMode>
 );
+
 export default App;
