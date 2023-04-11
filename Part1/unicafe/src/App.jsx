@@ -16,6 +16,9 @@ function App() {
   const neutralStats = () => setNeutral(neutral + 1);
   const [bad, setBad] = useState(0);
   const badStats = () => setBad(bad + 1);
+  const total = good + neutral + bad;
+  const average = (good * 1 + neutral * 0 + bad * -1) / total;
+  const positive = (good / total) * 100;
 
   return (
     <>
@@ -31,6 +34,9 @@ function App() {
           <Button text="good" info={good} />
           <Button text="neutral" info={neutral} />
           <Button text="bad" info={bad} />
+          <p>Total {total}</p>
+          <p>Average {average}</p>
+          <p>positive {positive}</p>
         </div>
       </div>
     </>
