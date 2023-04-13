@@ -1,12 +1,19 @@
 import { useState } from "react";
-import "./App.css";
 
-function App({ anecdotes }) {
-  const [selected, setSelected] = useState(
-    Math.floor(Math.random() * (anecdotes.length - 0) + 0)
+const App = ({ anecdotes }) => {
+  const [selected, setSelected] = useState(0);
+
+  const randomAnecdote = () => {
+    let random = Math.floor(Math.random() * (anecdotes.length - 0) + 0);
+    setSelected(random);
+  };
+
+  return (
+    <div>
+      <p>{anecdotes[selected]}</p>
+      <button onClick={randomAnecdote}>next anecdote</button>
+    </div>
   );
-  console.log(selected);
-  return <div>{anecdotes[selected]}</div>;
-}
+};
 
 export default App;
