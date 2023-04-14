@@ -1,7 +1,6 @@
 import Parts from "./Parts";
 
 const CourseContent = ({ parts }) => {
-  console.log("parts", parts);
   return (
     <div>
       {parts.map((part) => {
