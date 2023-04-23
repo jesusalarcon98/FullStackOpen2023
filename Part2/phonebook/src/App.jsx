@@ -10,11 +10,16 @@ const App = () => {
 
   const addPerson = (e) => {
     e.preventDefault();
-    const person = {
-      name: newName,
-    };
-    setPersons(persons.concat(person));
-    setNewName("");
+    const duplicate = persons.some((element) => element.name === newName);
+    if (duplicate) {
+      alert(`${newName} is already added to the phonebook`);
+    } else {
+      const person = {
+        name: newName,
+      };
+      setPersons(persons.concat(person));
+      setNewName("");
+    }
   };
 
   return (
