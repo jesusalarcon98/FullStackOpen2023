@@ -3,7 +3,7 @@ import Note from "../components/Note";
 import axios from "axios";
 import { useEffect } from "react";
 
-const App = (props) => {
+const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
@@ -13,15 +13,12 @@ const App = (props) => {
   };
 
   const hook = () => {
-    console.log("effect");
     axios.get("http://localhost:3001/notes").then((response) => {
-      console.log("promise fulfilled");
       setNotes(response.data);
     });
   };
 
   useEffect(hook, []);
-  console.log("render", notes.length, "notes");
 
   const addNote = (event) => {
     event.preventDefault();
