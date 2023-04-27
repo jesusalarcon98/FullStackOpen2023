@@ -14,6 +14,8 @@ function App() {
   };
   useEffect(hookCountries, []);
 
+  const selectCountrie = () => {};
+
   const countrieValueChange = (e) => {
     setSearchCountrie(e.target.value);
     const filtered = countries.filter((countrie) =>
@@ -44,7 +46,14 @@ function App() {
       });
     } else {
       return filteredCountries.map((countrie) => {
-        return <div key={countrie.population}>{countrie.name.common}</div>;
+        return (
+          <div key={countrie.population}>
+            {countrie.name.common}{" "}
+            <button onClick={() => setFilteredCountries([countrie])}>
+              Show
+            </button>
+          </div>
+        );
       });
     }
   };
@@ -52,7 +61,7 @@ function App() {
   return (
     <div>
       find countries{" "}
-      <input value={searchCountrie} onChange={countrieValueChange} />
+      <input value={searchCountrie} onChange={countrieValueChange} />{" "}
       {filterCountries()}
     </div>
   );
