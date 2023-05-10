@@ -47,6 +47,16 @@ const App = () => {
     }
   };
 
+  const deletePersons = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      PersonService.deletePerson(id);
+      const eliminate = persons.filter((person) => person.id !== id);
+      setPersons(eliminate);
+    } else {
+      console.log("Hola mundo");
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -62,7 +72,11 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul>
-        <Filter persons={persons} personsFilter={personsFilter} />
+        <Filter
+          persons={persons}
+          personsFilter={personsFilter}
+          deletePersons={deletePersons}
+        />
       </ul>
     </div>
   );
