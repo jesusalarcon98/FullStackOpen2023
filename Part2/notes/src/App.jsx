@@ -21,7 +21,7 @@ const App = () => {
         setNotes(notes.map((note) => (note.id !== id ? note : updatedNotes)));
       })
       .catch((error) => {
-        alert(`The nothe ${note.content} was already deleted from server`);
+        alert(`The note ${note.content} was already deleted from server`);
         setNotes(notes.filter((n) => n.id !== id));
       });
   };

@@ -33,7 +33,22 @@ const App = () => {
     e.preventDefault();
     const duplicate = persons.some((element) => element.name === newName);
     if (duplicate) {
-      alert(`${newName} is already added to the phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const person = persons.find((p) => p.name === newName);
+        const changedPerson = { ...person, number: newNumber };
+        PersonService.updatePerson(person.id, changedPerson).then(
+          (updatedPerson) => {
+            setPersons(persons.map((p) => (p.id !== person.id ? p : updatedPerson))
+            );
+            /*  setPersons(persons.map((p) => (p.id !== person.id ? p : updatedPerson))
+          ); */
+          }
+        );
+      }
     } else {
       const person = {
         name: newName,
@@ -52,8 +67,6 @@ const App = () => {
       PersonService.deletePerson(id);
       const eliminate = persons.filter((person) => person.id !== id);
       setPersons(eliminate);
-    } else {
-      console.log("Hola mundo");
     }
   };
 
