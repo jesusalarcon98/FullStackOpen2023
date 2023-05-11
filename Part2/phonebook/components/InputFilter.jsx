@@ -1,5 +1,9 @@
 const InputFilter = ({ personFilter, change }) => {
-  return <input value={personFilter} onChange={change} />;
+  return (
+    <div>
+      filter shown with <input value={personFilter} onChange={change} />
+    </div>
+  );
 };
 
 export default InputFilter;

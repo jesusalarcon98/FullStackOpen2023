@@ -3,12 +3,15 @@ import InputFilter from "../components/InputFilter";
 import Filter from "../components/Filter";
 import Form from "../components/Form";
 import PersonService from "./services/persons";
+import Notification from "../components/Notification";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [personsFilter, setPersonsFilter] = useState("");
+  const [successNotification, setSuccessNotification] = useState(null);
 
   const hook = () => {
     PersonService.getAll().then((initialPersons) => {
@@ -42,10 +45,13 @@ const App = () => {
         const changedPerson = { ...person, number: newNumber };
         PersonService.updatePerson(person.id, changedPerson).then(
           (updatedPerson) => {
-            setPersons(persons.map((p) => (p.id !== person.id ? p : updatedPerson))
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : updatedPerson))
             );
-            /*  setPersons(persons.map((p) => (p.id !== person.id ? p : updatedPerson))
-          ); */
+            setSuccessNotification(`${newName} changed is number.`);
+            setTimeout(() => {
+              setSuccessNotification(null);
+            }, 5000);
           }
         );
       }
@@ -58,6 +64,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+        setSuccessNotification(`Added ${newName}. `);
+        setTimeout(() => {
+          setSuccessNotification(null);
+        }, 5000);
       });
     }
   };
@@ -73,6 +83,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successNotification} />
       <InputFilter personFilter={personsFilter} change={findPersons} />
 
       <Form
