@@ -7,8 +7,6 @@ app.use(express.json());
 app.use(express.static("dist"));
 const Note = require("./models/note");
 
-/*  const key = import.meta.env.VITE_WHEATER_KEY; */
-
 let notes = [
   {
     id: 1,
