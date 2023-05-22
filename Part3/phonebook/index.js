@@ -22,11 +22,15 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
   let fullDate = new Date();
-  response.send(`<p>Phonebook has info for ${persons.length} people</p>
-  <p>${fullDate}</p>
-  `);
+  Person.find({})
+    .then((persons) => {
+      response.send(`<p>Phonebook has info for ${persons.length} people</p>
+    <p>${fullDate}</p>
+    `);
+    })
+    .catch((error) => next(error));
 });
 
 app.get(`/api/persons/:id`, (request, response, next) => {
@@ -51,7 +55,6 @@ app.delete(`/api/persons/:id`, (request, response, next) => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  const doubleName = persons.find((person) => person.name === body.name);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
