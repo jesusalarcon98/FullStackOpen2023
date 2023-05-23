@@ -15,8 +15,8 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  number: { type: String, required: true },
+  name: { type: String, required: true, unique: true, minlength: 3 },
+  number: { type: String, required: true, minlength: 8 },
 });
 
 try {
@@ -38,6 +38,5 @@ process.on("uncaughtException", (error) => {
   // Realiza las acciones adecuadas para manejar el error, como cerrar conexiones, guardar registros, etc.
   process.exit(1); // Finaliza la aplicación
 });
-
 
 module.exports = mongoose.model("Person", noteSchema);
