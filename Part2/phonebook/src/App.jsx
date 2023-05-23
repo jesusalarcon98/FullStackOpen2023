@@ -57,15 +57,26 @@ const App = () => {
             }, 5000);
           })
           .catch((error) => {
-            setNotification({
-              message: `Information of ${newName} has already been removed from server `,
-              type: "error",
-            });
+            if (
+              error.response &&
+              error.response.status === 400 &&
+              error.response.data.error.includes("number")
+            ) {
+              setNotification({
+                message: "Number should be at least 8 digits long.",
+                type: "error",
+              });
+            } else {
+              setNotification({
+                message: `Information of ${newName} has already been removed from the server.`,
+                type: "error",
+              });
+              const updatedPersons = persons.filter((p) => p.id !== person.id);
+              setPersons(updatedPersons);
+            }
             setTimeout(() => {
               setNotification(null);
             }, 5000);
-            const updatedPersons = persons.filter((p) => p.id !== person.id);
-            setPersons(updatedPersons);
           });
       }
     } else {
@@ -73,18 +84,28 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      PersonService.create(person).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNotification({
-          message: `Added ${newName}. `,
-          type: "success",
+      PersonService.create(person)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNotification({
+            message: `Added ${newName}. `,
+            type: "success",
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          setNotification({
+            message: error.response.data.error,
+            type: "error",
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
         });
-        setTimeout(() => {
-          setNotification(null);
-        }, 5000);
-        setNewName("");
-        setNewNumber("");
-      });
     }
   };
 
