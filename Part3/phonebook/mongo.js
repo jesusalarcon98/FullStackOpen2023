@@ -18,10 +18,6 @@ mongoose.connect(url);
 const noteSchema = new mongoose.Schema({
   name: String,
   number: String,
-
-  /*  id: 1,
-    name: "Ada Lovelace",
-    number: "928-301-234", */
 });
 
 const Person = mongoose.model("Person", noteSchema);
