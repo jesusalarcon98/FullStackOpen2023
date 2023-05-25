@@ -7,6 +7,3 @@ test("dummmy returns one", () => {
 
   expect(result).toBe(1);
 });
-/*  test("of one value is the value itself", () => {
-    expect(average([1])).toBe(1);
-  }); */
