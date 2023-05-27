@@ -7,11 +7,11 @@ const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 
-const password = process.env.VITE_MONGODB_KEY;
+logger.info("connecting to", config.MONGODB_URI);
 
-const mongoUrl = `mongodb+srv://JesusAlarcon:${password}@clusterprueba.psxsc82.mongodb.net/notes?retryWrites=true&w=majority`;
+
 mongoose
-  .connect(mongoUrl)
+  .connect(config.MONGODB_URI)
   .then(() => {
     logger.info("connected to MongoDB");
   })
