@@ -32,9 +32,28 @@ test("all blogs are returned", async () => {
 test("returned if ID property exists", async () => {
   const initialBlogs = await helper.blogsInDb();
 
-  console.log("blogs", initialBlogs);
-
   expect(initialBlogs[0].id).toBeDefined();
+});
+
+test("a note is added", async () => {
+  const newBlog = {
+    _id: "5a422b891b54a676234d17fa",
+    title: "First class tests",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+    likes: 10,
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const initialBlogs = await helper.blogsInDb();
+  expect(initialBlogs).toHaveLength(helper.initialBlogs.length + 1);
+
+  const contents = initialBlogs.map((r) => r.author);
+  expect(contents).toContain("Robert C. Martin");
 });
 
 afterAll(() => {
