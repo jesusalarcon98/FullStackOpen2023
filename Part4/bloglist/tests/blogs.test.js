@@ -35,7 +35,7 @@ test("returned if ID property exists", async () => {
   expect(initialBlogs[0].id).toBeDefined();
 });
 
-test("a note is added", async () => {
+test("a blog is added", async () => {
   const newBlog = {
     _id: "5a422b891b54a676234d17fa",
     title: "First class tests",
@@ -54,6 +54,25 @@ test("a note is added", async () => {
 
   const contents = initialBlogs.map((r) => r.author);
   expect(contents).toContain("Robert C. Martin");
+});
+
+test("return 0 if likes doesnt exist", async () => {
+  const newBlog = {
+    _id: "5a422ba71b54a676234d17fb",
+    title: "TDD harms architecture",
+    author: "Robert C. Martin",
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+  };
+
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const createdBlog = response.body;
+
+  expect(createdBlog.likes || 0).toBe(0);
 });
 
 afterAll(() => {
