@@ -46,7 +46,7 @@ test("a blog is added", async () => {
   await api
     .post("/api/blogs")
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect("Content-Type", /application\/json/);
 
   const initialBlogs = await helper.blogsInDb();
@@ -67,12 +67,23 @@ test("return 0 if likes doesnt exist", async () => {
   const response = await api
     .post("/api/blogs")
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect("Content-Type", /application\/json/);
 
   const createdBlog = response.body;
 
-  expect(createdBlog.likes || 0).toBe(0);
+  expect(createdBlog.likes).toBe(0);
+});
+
+test("return 400 if title or url doesnt exist", async () => {
+  const newBlog = {
+    url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
+    likes: 10,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 });
 
 afterAll(() => {
