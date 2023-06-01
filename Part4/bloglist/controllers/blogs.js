@@ -7,7 +7,7 @@ blogsRouter.get("/", (request, response) => {
   });
 });
 
-blogsRouter.post("/", (request, response, next) => {
+blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
 
   const blog = new Blog({
@@ -20,15 +20,12 @@ blogsRouter.post("/", (request, response, next) => {
   if (!body.title || !body.url) {
     return response.status(400).json({ error: "title and url are required" });
   }
-
-  blog
-    .save()
-    .then((savedBlog) => {
-      response.json(savedBlog);
-    })
-    .catch((error) => {
-      next(error);
-    });
+  try {
+    const blogSaved = await blog.save();
+    response.json(blogSaved);
+  } catch (exception) {
+    next(exception);
+  }
 });
 
 module.exports = blogsRouter;
