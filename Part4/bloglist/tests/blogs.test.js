@@ -88,10 +88,8 @@ test("return 400 if title or url doesnt exist", async () => {
 
 test("Deletion of a blog", async () => {
   const startBlogs = await helper.blogsInDb();
-  console.log("iniciales", startBlogs);
-  const blogDelete = startBlogs[0];
 
-  console.log("blog", blogDelete);
+  const blogDelete = startBlogs[0];
 
   await api.delete(`/api/blogs/${blogDelete.id}`).expect(204);
 
@@ -100,6 +98,22 @@ test("Deletion of a blog", async () => {
   expect(blogsEnd).toHaveLength(helper.initialBlogs.length - 1);
   const content = blogsEnd.map((r) => r.author);
   expect(content).not.toContain(blogDelete.author);
+});
+
+test("updating a blog", async () => {
+  const startBlogs = await helper.blogsInDb();
+  const blogUpdated = startBlogs[0];
+
+  const updatedBlog = {
+    ...blogUpdated,
+    likes: 100,
+  };
+
+  await api.put(`/api/blogs/${blogUpdated.id}`).send(updatedBlog).expect(200);
+  const blogsEnd = await helper.blogsInDb();
+  const updatedBlogFinal = blogsEnd.find((blog) => blog.id === blogUpdated.id);
+
+  expect(updatedBlogFinal.likes).toBe(updatedBlog.likes);
 });
 
 afterAll(() => {
