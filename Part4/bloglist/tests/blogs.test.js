@@ -86,6 +86,22 @@ test("return 400 if title or url doesnt exist", async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 });
 
+test("Deletion of a blog", async () => {
+  const startBlogs = await helper.blogsInDb();
+  console.log("iniciales", startBlogs);
+  const blogDelete = startBlogs[0];
+
+  console.log("blog", blogDelete);
+
+  await api.delete(`/api/blogs/${blogDelete.id}`).expect(204);
+
+  const blogsEnd = await helper.blogsInDb();
+
+  expect(blogsEnd).toHaveLength(helper.initialBlogs.length - 1);
+  const content = blogsEnd.map((r) => r.author);
+  expect(content).not.toContain(blogDelete.author);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
