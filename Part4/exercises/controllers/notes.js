@@ -6,10 +6,8 @@ const User = require("../models/user");
 const getTokenFrom = (request) => {
   const authorization = request.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    console.log("dentro", authorization.substring(7));
     return authorization.substring(7);
   }
-  console.log("dentr de else");
   return null;
 };
 
@@ -30,7 +28,6 @@ notesRouter.get("/:id", async (request, response) => {
 notesRouter.post("/", async (request, response) => {
   const body = request.body;
   const token = getTokenFrom(request);
-  console.log("dentro de post y vemos el token", token);
   const decodedToken = jwt.verify(token, process.env.VITE_TOKEN_KEY);
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: "token missing or invalid" });

@@ -38,7 +38,7 @@ describe("when there is initially some notes saved", () => {
 });
 
 describe("viewing a specific note", () => {
-  test("succeeds with a valid id", async () => {
+  test("success with a valid id", async () => {
     const notesAtStart = await helper.notesInDb();
 
     const noteToView = notesAtStart[0];
@@ -67,7 +67,7 @@ describe("viewing a specific note", () => {
 });
 
 describe("addition of a new note", () => {
-  test("succeeds with valid data", async () => {
+  test("success with valid data", async () => {
     const newNote = {
       content: "async/await simplifies making async calls",
       important: true,
@@ -100,7 +100,7 @@ describe("addition of a new note", () => {
 });
 
 describe("deletion of a note", () => {
-  test("succeeds with status code 204 if id is valid", async () => {
+  test("success with status code 204 if id is valid", async () => {
     const notesAtStart = await helper.notesInDb();
     const noteToDelete = notesAtStart[0];
 
