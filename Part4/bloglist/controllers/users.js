@@ -6,9 +6,7 @@ usersRouter.post("/", async (request, response, next) => {
   const { password, name, username } = request.body;
 
   if (password === undefined || username === undefined) {
-    return response
-      .status(400)
-      .json({ error: "missing username or password" });
+    return response.status(400).json({ error: "missing username or password" });
   } else if (password.length < 3 || username.length < 3) {
     return response
       .status(400)
@@ -41,7 +39,7 @@ usersRouter.post("/", async (request, response, next) => {
 });
 
 usersRouter.get("/", async (request, response) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate("blogs");
   response.json(users);
 });
 
