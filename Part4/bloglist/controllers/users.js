@@ -8,8 +8,7 @@ usersRouter.post("/", async (request, response, next) => {
   if (password === undefined || username === undefined) {
     return response
       .status(400)
-      .json({ error: "missing username or password " });
-    zz;
+      .json({ error: "missing username or password" });
   } else if (password.length < 3 || username.length < 3) {
     return response
       .status(400)
@@ -19,7 +18,9 @@ usersRouter.post("/", async (request, response, next) => {
       const userExist = await User.findOne({ username });
 
       if (userExist) {
-        return response.status(400).json({ error: "Username already exists" });
+        return response
+          .status(400)
+          .json({ error: "`Username` already exists" });
       }
 
       const saltRounds = 10;
