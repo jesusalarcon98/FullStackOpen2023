@@ -11,12 +11,12 @@ blogsRouter.get("/", (request, response) => {
 
 blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
+
+  const user = request.user;
   try {
-    const decodedToken = jwt.verify(request.token, process.env.VITE_TOKEN_KEY);
-    if (!decodedToken.id) {
+    if (!user) {
       return response.status(401).json({ error: "token missing or invalid" });
     }
-    const user = await User.findById(decodedToken.id);
 
     const blog = new Blog({
       title: body.title,
@@ -33,29 +33,27 @@ blogsRouter.post("/", async (request, response, next) => {
     const blogSaved = await blog.save();
     user.blogs = user.blogs.concat(blogSaved._id);
     await user.save();
-    response.json(blogSaved);
+    response.status(201).json(blogSaved);
   } catch (error) {
     next(error);
   }
 });
 
-blogsRouter.delete("/:id", async (request, response, next) => {
-  try {
-    const decodedToken = jwt.verify(request.token, process.env.VITE_TOKEN_KEY);
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: "token missing or invalid" });
-    }
-    const blog = await Blog.findById(request.params.id);
-    if (!blog) {
-      return response.status(404).json({ error: "blog not found" });
-    }
-    if (blog.user.toString() !== decodedToken.id) {
-      return response.status(403).json({ error: "unauthorized access" });
-    }
+blogsRouter.delete("/:id", async (request, response) => {
+  const user = request.user;
+
+  if (!user) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+  if (blog.user.toString() === request.user.id) {
     await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
-  } catch (exception) {
-    next(exception);
+  } else {
+    return response
+      .status(401)
+      .json({ error: "Unauthorized to delete the blog" });
   }
 });
 
@@ -75,17 +73,5 @@ blogsRouter.put("/:id", async (request, response, next) => {
     })
     .catch((error) => next(error));
 });
-
-/*  
-	const blog = {
-		title: body.title,
-		author: body.author,
-		url: body.url,
-		likes: body.likes? body.likes : 0 ,
-	}
-  
-	await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-	response.json(blog)
-  }) */
 
 module.exports = blogsRouter;

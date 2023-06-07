@@ -24,6 +24,20 @@ const tokenExtractor = (request, response, next) => {
   return next();
 };
 
+const userExtractor = async (request, response, next) => {
+  if (!request.token) {
+    request.user = null;
+  } else {
+    const decodedToken = jwt.verify(request.token, process.env.VITE_TOKEN_KEY);
+    if (!decodedToken.id) {
+      request.user = null;
+    } else {
+      request.user = await User.findById(decodedToken.id);
+    }
+  }
+  next();
+};
+
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
 
@@ -32,7 +46,6 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message });
   } else if (error.name === "JsonWebTokenError") {
-    console.log("hola mundo");
     return response.status(400).json({ error: error.message });
   } else if (error.name === "TokenExpiredError") {
     return response.status(401).json({
@@ -47,5 +60,6 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   tokenExtractor,
+  userExtractor,
   errorHandler,
 };
