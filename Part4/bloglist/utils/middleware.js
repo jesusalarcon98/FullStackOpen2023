@@ -28,11 +28,18 @@ const userExtractor = async (request, response, next) => {
   if (!request.token) {
     request.user = null;
   } else {
-    const decodedToken = jwt.verify(request.token, process.env.VITE_TOKEN_KEY);
-    if (!decodedToken.id) {
-      request.user = null;
-    } else {
-      request.user = await User.findById(decodedToken.id);
+    try {
+      const decodedToken = jwt.verify(
+        request.token,
+        process.env.VITE_TOKEN_KEY
+      );
+      if (!decodedToken.id) {
+        request.user = null;
+      } else {
+        request.user = await User.findById(decodedToken.id);
+      }
+    } catch (error) {
+      next(error);
     }
   }
   next();
