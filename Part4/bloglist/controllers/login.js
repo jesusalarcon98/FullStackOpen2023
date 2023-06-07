@@ -20,7 +20,9 @@ loginRouter.post("/", async (request, response) => {
     id: user._id,
   };
 
-  const token = jwt.sign(userToken, process.env.VITE_TOKEN_KEY);
+  const token = jwt.sign(userToken, process.env.VITE_TOKEN_KEY, {
+    expiresIn: 60 * 60,
+  });
 
   response
     .status(200)
