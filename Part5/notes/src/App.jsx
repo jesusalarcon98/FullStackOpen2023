@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Note from "../components/Note";
 import noteService from "./services/notes";
 import Notification from "../components/Notification";
+import loginService from "./services/login";
 import { useEffect } from "react";
 import "./index.css";
 
@@ -28,6 +29,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
 
   const handleNoteChange = (e) => {
     setNewNote(e.target.value);
@@ -60,9 +62,34 @@ const App = () => {
 
   useEffect(hook, []);
 
-  const handleLogin = (event) => {
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      noteService.setToken(user.token);
+    }
+  }, []);
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    console.log("logging with", username, password);
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+
+      window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user));
+      noteService.setToken(user.token);
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (exception) {
+      setErrorMessage("Wrong credentials");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   const addNote = (event) => {
@@ -81,32 +108,49 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
+  const loginForm = () => (
+    <form onSubmit={handleLogin}>
+      <div>
+        Username
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
+      </div>
+      <div>
+        Password
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  );
+
+  const noteForm = () => (
+    <form onSubmit={addNote}>
+      <input value={newNote} onChange={handleNoteChange} />
+      <button type="submit">save</button>
+    </form>
+  );
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-
-      <form onSubmit={handleLogin}>
+      {user === null ? (
+        loginForm()
+      ) : (
         <div>
-          setUsername
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <p>{user.name} logged-in</p>
+          {noteForm()}
         </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
+      )}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
