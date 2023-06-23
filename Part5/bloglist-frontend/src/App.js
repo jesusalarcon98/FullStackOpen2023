@@ -42,16 +42,25 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const user = await loginService.login({ username, password });
       setUser(user);
-      setPassword("");
+      window.localStorage.setItem("blogUser", JSON.stringify(user));
       setUsername("");
-      console.log("try", user);
+      setPassword("");
     } catch (exception) {
-      console.log("en el catch", exception);
       setErrorMessage("Wrong Crendentials");
       setTimeout(() => {
         setErrorMessage(null);
@@ -59,11 +68,19 @@ const App = () => {
     }
   };
 
+  const logOut = () => {
+    window.localStorage.removeItem("blogUser");
+    setUser(null)
+  };
+
   const showBlogs = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <p>{user.name} logged in </p>
+        <p>
+          {user.name} logged in -<button onClick={logOut}>Log out</button>
+        </p>
+
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
         ))}
