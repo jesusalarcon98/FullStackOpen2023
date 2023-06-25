@@ -3,10 +3,51 @@ import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
+
+const Create = () => {
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
+  const handleCreateBlog = (e) => {
+    e.preventDefault();
+    const blog = 
+    console.log("titulo", title);
+
+  }
+
+  return (
+    <div>
+      <h2>Create new</h2>
+      <form onSubmit={handleCreateBlog}>
+        <div>
+          title:
+          <input type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)} />
+          Author:
+          <input type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)} />
+          Url:
+          <input type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)} />
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </div>
+  )
+}
+
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -80,6 +121,7 @@ const App = () => {
         <p>
           {user.name} logged in -<button onClick={logOut}>Log out</button>
         </p>
+        <Create />
 
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />

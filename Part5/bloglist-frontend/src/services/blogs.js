@@ -12,5 +12,10 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const CreateBlog = (blog) => {
+  const request = axios.post(baseUrl, blog)
+  return request.then(response => response.data)
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, setToken }
+export default { getAll, setToken, CreateBlog }
