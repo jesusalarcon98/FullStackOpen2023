@@ -12,9 +12,14 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-const CreateBlog = (blog) => {
-  const request = axios.post(baseUrl, blog)
-  return request.then(response => response.data)
+const CreateBlog = async (blog) => {
+  console.log("dentro de la funcion", blog);
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.post(baseUrl, blog, config)
+  return response.data;
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export

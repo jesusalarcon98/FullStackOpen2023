@@ -4,16 +4,27 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 
-const Create = () => {
+const Create = ({ blogs, setBlogs }) => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
   const handleCreateBlog = (e) => {
     e.preventDefault();
-    const blog = 
-    console.log("titulo", title);
+    const blog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    console.log("blog", blog);
 
+    blogService.CreateBlog(blog).then((createdBlog) => {
+      setBlogs(blogs.concat(createdBlog));
+      setTitle("")
+      setAuthor("")
+      setUrl("")
+    })
   }
+
 
   return (
     <div>
@@ -25,11 +36,13 @@ const Create = () => {
             value={title}
             name="Title"
             onChange={({ target }) => setTitle(target.value)} />
+          <br></br>
           Author:
           <input type="text"
             value={author}
             name="Author"
             onChange={({ target }) => setAuthor(target.value)} />
+          <br></br>
           Url:
           <input type="text"
             value={url}
@@ -84,7 +97,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    const loggedUserJSON = window.localStorage.getItem('blogUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -121,7 +134,7 @@ const App = () => {
         <p>
           {user.name} logged in -<button onClick={logOut}>Log out</button>
         </p>
-        <Create />
+        <Create blogs={blogs} setBlogs={setBlogs} />
 
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
