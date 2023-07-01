@@ -57,7 +57,6 @@ const App = () => {
     }
   }, [])
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -111,12 +110,23 @@ const App = () => {
         setBlogs(blogs
           .map((blog) => blog.id !== id ? blog : updatedLikes)
           .sort((a, b) => b.likes - a.likes))
-
       })
-    /*      const updatedBlogs = blogs.map((blog) => (blog.id !== id ? blog : updatedLikes));
- 
-        const sortedBlogs = updatedBlogs.sort((a, b) => b.likes - a.likes);
-        setBlogs(sortedBlogs);*/
+  }
+
+  const deleteBlog = (id, author, title) => {
+    if (window.confirm(`Remove blog ${title} by ${author}`)) {
+      blogService.deleteBlog(id)
+        .then(() => {
+          setBlogs(blogs.filter((blog) => blog.id !== id));
+          setErrorMessage({
+            message: `successfully removed`,
+            type: "success",
+          });
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        })
+    }
   }
 
   const showBlogs = () => {
@@ -133,7 +143,7 @@ const App = () => {
         </Togglable>
 
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} buttonLabel="View" editLikes={() => editLikes(blog.id)} />
+          <Blog key={blog.id} blog={blog} buttonLabel="View" editLikes={() => editLikes(blog.id)} deleteBlog={() => deleteBlog(blog.id, blog.author, blog.title)} />
         ))}
       </div>
     );
