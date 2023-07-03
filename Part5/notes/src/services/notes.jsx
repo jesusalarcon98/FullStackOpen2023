@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = `/api/notes`;
+const baseURL = "/api/notes";
 
 let token = null;
 
