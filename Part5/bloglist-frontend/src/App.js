@@ -24,38 +24,44 @@ const App = () => {
           <div>
             Username
             <input
-              type="text"
+              type='text'
               value={username}
-              name="Username"
+              name='Username'
               onChange={({ target }) => setUsername(target.value)}
             />
             <br></br>
             password
             <input
-              type="password"
+              type='password'
               value={password}
-              name="Password"
+              name='Password'
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit">Login</button>
+          <button type='submit'>Login</button>
         </form>
       </div>
     );
   };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.sort((a, b) => { return b.likes - a.likes })));
+    blogService.getAll().then((blogs) =>
+      setBlogs(
+        blogs.sort((a, b) => {
+          return b.likes - a.likes;
+        })
+      )
+    );
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('blogUser')
+    const loggedUserJSON = window.localStorage.getItem("blogUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
     }
-  }, [])
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,56 +84,59 @@ const App = () => {
 
   const logOut = () => {
     window.localStorage.removeItem("blogUser");
-    setUser(null)
+    setUser(null);
   };
 
   const addBlog = (blogObject) => {
-    blogService.CreateBlog(blogObject).then((returnedBlogs) => {
-      setBlogs(blogs.concat(returnedBlogs));
-      setErrorMessage({
-        message: `a new blog ${returnedBlogs.title} by ${returnedBlogs.author} added`,
-        type: "success",
+    blogService
+      .CreateBlog(blogObject)
+      .then((returnedBlogs) => {
+        setBlogs(blogs.concat(returnedBlogs));
+        setErrorMessage({
+          message: `a new blog ${returnedBlogs.title} by ${returnedBlogs.author} added`,
+          type: "success",
+        });
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        setErrorMessage({
+          message: error.response.data.error,
+          type: "error",
+        });
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       });
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }).catch((error) => {
-      setErrorMessage({
-        message: error.response.data.error,
-        type: "error",
-      });
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    });
-  }
+  };
 
   const editLikes = (id) => {
     const blog = blogs.find((n) => n.id === id);
-    const changedLikes = { ...blog, likes: blog.likes + 1 }
-    blogService.EditBlog(id, changedLikes)
-      .then((updatedLikes) => {
-        setBlogs(blogs
-          .map((blog) => blog.id !== id ? blog : updatedLikes)
-          .sort((a, b) => b.likes - a.likes))
-      })
-  }
+    const changedLikes = { ...blog, likes: blog.likes + 1 };
+    blogService.EditBlog(id, changedLikes).then((updatedLikes) => {
+      setBlogs(
+        blogs
+          .map((blog) => (blog.id !== id ? blog : updatedLikes))
+          .sort((a, b) => b.likes - a.likes)
+      );
+    });
+  };
 
   const deleteBlog = (id, author, title) => {
     if (window.confirm(`Remove blog ${title} by ${author}`)) {
-      blogService.deleteBlog(id)
-        .then(() => {
-          setBlogs(blogs.filter((blog) => blog.id !== id));
-          setErrorMessage({
-            message: `successfully removed`,
-            type: "success",
-          });
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
-        })
+      blogService.deleteBlog(id).then(() => {
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+        setErrorMessage({
+          message: "successfully removed",
+          type: "success",
+        });
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
     }
-  }
+  };
 
   const showBlogs = () => {
     return (
@@ -138,12 +147,18 @@ const App = () => {
         <p>
           {user.name} logged in -<button onClick={logOut}>Log out</button>
         </p>
-        <Togglable buttonLabel="New Blog">
+        <Togglable buttonLabel='New Blog'>
           <CreateFormBlog createBlog={addBlog} />
         </Togglable>
 
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} buttonLabel="View" editLikes={() => editLikes(blog.id)} deleteBlog={() => deleteBlog(blog.id, blog.author, blog.title)} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            buttonLabel='View'
+            editLikes={() => editLikes(blog.id)}
+            deleteBlog={() => deleteBlog(blog.id, blog.author, blog.title)}
+          />
         ))}
       </div>
     );
