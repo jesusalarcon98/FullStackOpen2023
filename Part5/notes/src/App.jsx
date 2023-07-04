@@ -1,12 +1,12 @@
 import React, { useState, useRef } from "react";
-import Note from "../components/Note";
+import Note from "./components/Note";
 import noteService from "./services/notes";
-import Notification from "../components/Notification";
-import NoteForm from "../components/NoteForm";
-import Togglable from "../components/Togglable";
+import Notification from "./components/Notification";
+import NoteForm from "./components/NoteForm";
+import Togglable from "./components/Togglable";
 import loginService from "./services/login";
-import LoginForm from "../components/LoginForm";
-import Footer from "../components/Footer";
+import LoginForm from "./components/LoginForm";
+import Footer from "./components/Footer";
 import { useEffect } from "react";
 import "./index.css";
 
