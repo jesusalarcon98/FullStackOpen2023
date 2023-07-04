@@ -12,7 +12,6 @@ test("renders content", () => {
 
   const component = render(<Note note={note} />);
   const li = component.container.querySelector("li");
-  /*  console.log(prettyDOM(li)); */
 
   expect(component.container).toHaveTextContent(
     "Component testing is done with react-testing-library"
