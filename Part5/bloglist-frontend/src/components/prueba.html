@@ -1,30 +1,35 @@
 <body>
   <div>
-    <div
-      style="
-        padding-top: 10px;
-        padding-left: 2px;
-        border: solid;
-        border-width: 1px;
-        margin-bottom: 5px;
-      "
-    >
-      <div class="testName" style="display: none">
-        First class tests Robert C. Martin
-        <button>View</button>
-      </div>
-      <div class="showExtraInfo" style="">
-        First class tests
-
-        <button>hide</button>
-        <br />
-        http://robertMartin.com
-        <br />
-        likes 0 <button class="testLikes">Like</button>
-        <br />
-        Robert C. Martin
-        <button>remove</button>
-      </div>
+    <div>
+      <h2>Create new blog</h2>
+      <form>
+        <div>
+          title:
+          <input
+            id="title"
+            name="Title"
+            type="text"
+            value="First class tests"
+          />
+          <br />
+          Author:
+          <input
+            id="author"
+            name="Author"
+            type="text"
+            value="Robert C. Martin"
+          />
+          <br />
+          Url:
+          <input
+            id="url"
+            name="Url"
+            type="text"
+            value="http://robertMartin.com"
+          />
+        </div>
+        <button type="submit">Create</button>
+      </form>
     </div>
   </div>
 </body>

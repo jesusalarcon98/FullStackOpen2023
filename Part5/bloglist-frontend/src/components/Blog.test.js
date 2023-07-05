@@ -1,7 +1,3 @@
-/*
-Realice una prueba que garantice que si se hace clic dos veces en el botón like, se llama dos veces al controlador de eventos que el componente recibió como props.
-
- */
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render, fireEvent } from "@testing-library/react";
@@ -61,7 +57,5 @@ describe("Show name and author but no likes or url", () => {
     fireEvent.click(buttonLike);
 
     expect(editLikes.mock.calls).toHaveLength(2);
-
-    component.debug();
   });
 });
