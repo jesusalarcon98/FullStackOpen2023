@@ -18,16 +18,19 @@ const Blog = ({ blog, buttonLabel, editLikes, deleteBlog }) => {
   };
   return (
     <div style={blogStyle}>
-      <div style={hideWhenVisible} className="testName">
+      <div style={hideWhenVisible} className='testName'>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonLabel}</button>
       </div>
-      <div style={showWhenVisible} className="showExtraInfo">
+      <div style={showWhenVisible} className='showExtraInfo'>
         {blog.title} <button onClick={toggleVisibility}>hide</button>
         <br></br>
         {blog.url}
         <br></br>
-        likes {blog.likes} <button onClick={editLikes}>Like</button>
+        likes {blog.likes}{" "}
+        <button onClick={editLikes} className='testLikes'>
+          Like
+        </button>
         <br></br>
         {blog.author}
         <button onClick={deleteBlog}>remove</button>

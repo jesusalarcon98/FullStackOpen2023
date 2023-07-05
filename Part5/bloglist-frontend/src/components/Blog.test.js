@@ -1,5 +1,5 @@
 /*
-Realice una prueba que verifique que la URL del blog y el número de likes se muestran cuando se hace clic en el botón que controla los detalles mostrados.
+Realice una prueba que garantice que si se hace clic dos veces en el botón like, se llama dos veces al controlador de eventos que el componente recibió como props.
 
  */
 import React from "react";
@@ -40,6 +40,28 @@ describe("Show name and author but no likes or url", () => {
 
     expect(divTest).toHaveTextContent("http://robertMartin.com");
     expect(divTest).toHaveTextContent("likes 0");
+  });
+
+  test("click twice button like", () => {
+    const blog = {
+      title: "First class tests",
+      author: "Robert C. Martin",
+      url: "http://robertMartin.com",
+      likes: 0,
+    };
+
+    const editLikes = jest.fn();
+    const component = render(
+      <Blog blog={blog} buttonLabel='View' editLikes={editLikes} />
+    );
+    const buttonShowMore = component.getByText("View");
+    fireEvent.click(buttonShowMore);
+    const buttonLike = component.container.querySelector(".testLikes");
+    fireEvent.click(buttonLike);
+    fireEvent.click(buttonLike);
+
+    expect(editLikes.mock.calls).toHaveLength(2);
+
     component.debug();
   });
 });
