@@ -10,7 +10,8 @@
     "build:ui": "rm -rf dist && cd ../../Part2/notes && npm run build --prod && cp -r dist ../../Part3/exercises",
     "lint": "eslint .",
     "test": "jest --watchAll",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

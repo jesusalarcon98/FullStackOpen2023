@@ -6,7 +6,7 @@ describe("Note app", () => {
       username: "root",
       password: "root",
     };
-    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+    cy.request("POST", `${Cypress.env("BACKEND")}/users`, user);
     cy.visit("http://localhost:5173/");
   });
 
@@ -57,18 +57,37 @@ describe("Note app", () => {
       cy.contains("a note created by cypress");
     });
 
-    describe("and a note exists", function () {
+    describe("and a(severals) note exists", function () {
       beforeEach(function () {
         cy.createNote({
-          content: "another note cypress",
+          content: "first note",
+          important: false,
+        });
+        cy.createNote({
+          content: "second note",
+          important: false,
+        });
+        cy.createNote({
+          content: "third note",
           important: false,
         });
       });
 
       it("it can be made important", function () {
-        cy.contains("another note cypress").contains("make important").click();
+        cy.contains("third note").contains("make important").click();
 
-        cy.contains("another note cypress").contains("make not important");
+        cy.contains("third note").contains("make not important");
+      });
+
+      it("one of those can be made important", function () {
+        cy.contains("second note").contains("make important").click();
+        cy.contains("second note").contains("make not important").click();
+      });
+
+      it("other of those can be made important", function () {
+        cy.contains("second note").parent().find("button").as("theButton");
+        cy.get("@theButton").click({ multiple: true });
+        cy.get("@theButton").should("contain", "make not important");
       });
     });
   });
