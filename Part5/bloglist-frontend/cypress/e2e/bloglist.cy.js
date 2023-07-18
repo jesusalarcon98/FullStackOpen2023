@@ -68,18 +68,21 @@ describe("Blog app", () => {
         });
       });
 
-      it.only("like a blog", function () {
+      it("like a blog", function () {
         cy.contains("third blog").contains("View").click();
         cy.contains("third blog")
           .parent()
           .find("button:contains('Like')")
           .click();
       });
+
+      it.only("delete a blog", function () {
+        cy.contains("second blog").contains("View").click();
+        cy.contains("second blog")
+          .parent()
+          .find("button:contains('remove')")
+          .click();
+      });
     });
   });
-  /*  cy.contains("third blog").contains("View").click();
-  cy.contains("third blog")
-    .parent()
-    .find("button:contains('Like')")
-    .click(); */
 });
