@@ -17,7 +17,7 @@ const Blog = ({ blog, buttonLabel, editLikes, deleteBlog }) => {
     setVisible(!visible);
   };
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div style={hideWhenVisible} className='testName'>
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonLabel}</button>

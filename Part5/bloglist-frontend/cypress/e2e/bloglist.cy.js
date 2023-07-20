@@ -92,7 +92,7 @@ describe("Blog app", () => {
       });
     });
 
-    describe.only("when there are more than one users", function () {
+    describe("when there are more than one users", function () {
       beforeEach(function () {
         cy.contains("Log out").click();
 
@@ -123,6 +123,31 @@ describe("Blog app", () => {
           .find("button:contains('remove')")
           .click();
         cy.contains("unauthorized access");
+      });
+
+      it.only("blogs ordered by likes", function () {
+        cy.contains("New Blog").click();
+        cy.get("#title").type("blog with no likes");
+        cy.get("#author").type("Jesús Alarcón");
+        cy.get("#url").type("google.com");
+        cy.contains("save").click();
+        cy.contains("a new blog blog with no likes by Jesús Alarcón added");
+
+        /* cy.contains("New Blog").click(); */
+        cy.get("#title").type("blog with one like");
+        cy.get("#author").type("Jesús Alarcón");
+        cy.get("#url").type("google.com");
+        cy.contains("save").click();
+        cy.contains("a new blog blog with one like by Jesús Alarcón added");
+
+        cy.contains("blog with one like").contains("View").click();
+        cy.contains("blog with one like")
+          .parent()
+          .find("button:contains('Like')")
+          .click();
+
+        cy.get(".blog").eq(0).should("contain", "blog with one like");
+        cy.get(".blog").eq(1).should("contain", "blog with no likes");
       });
     });
   });
