@@ -71,8 +71,9 @@ const App = () => {
     e.preventDefault();
     try {
       const user = await loginService.login({ username, password });
-      setUser(user);
       window.localStorage.setItem("blogUser", JSON.stringify(user));
+      blogService.setToken(user.token);
+      setUser(user);
       setUsername("");
       setPassword("");
     } catch (exception) {
@@ -129,16 +130,27 @@ const App = () => {
 
   const deleteBlog = (id, author, title) => {
     if (window.confirm(`Remove blog ${title} by ${author}`)) {
-      blogService.deleteBlog(id).then(() => {
-        setBlogs(blogs.filter((blog) => blog.id !== id));
-        setErrorMessage({
-          message: "successfully removed",
-          type: "success",
+      blogService
+        .deleteBlog(id)
+        .then(() => {
+          setBlogs(blogs.filter((blog) => blog.id !== id));
+          setErrorMessage({
+            message: "successfully removed",
+            type: "success",
+          });
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setErrorMessage({
+            message: error.response.data.error,
+            type: "error",
+          });
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         });
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
-      });
     }
   };
 
@@ -161,7 +173,9 @@ const App = () => {
             blog={blog}
             buttonLabel='View'
             editLikes={() => editLikes(blog.id)}
-            deleteBlog={() => deleteBlog(blog.id, blog.author, blog.title)}
+            deleteBlog={() =>
+              deleteBlog(blog.id, blog.author, blog.title, user)
+            }
           />
         ))}
       </div>

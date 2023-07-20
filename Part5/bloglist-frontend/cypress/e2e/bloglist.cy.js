@@ -6,7 +6,14 @@ describe("Blog app", () => {
       username: "root",
       password: "root",
     };
+
+    const userfake = {
+      name: "JesúsFalso",
+      username: "falso",
+      password: "falso",
+    };
     cy.request("POST", "http://localhost:3000/api/users", user);
+    cy.request("POST", "http://localhost:3000/api/users", userfake);
     cy.visit("http://localhost:3000");
   });
 
@@ -76,12 +83,46 @@ describe("Blog app", () => {
           .click();
       });
 
-      it.only("delete a blog", function () {
+      it("delete a blog", function () {
         cy.contains("second blog").contains("View").click();
         cy.contains("second blog")
           .parent()
           .find("button:contains('remove')")
           .click();
+      });
+    });
+
+    describe.only("when there are more than one users", function () {
+      beforeEach(function () {
+        cy.contains("Log out").click();
+
+        cy.get("#username").type("falso");
+        cy.get("#password").type("falso");
+        cy.get("#login-button").click();
+        cy.contains("JesúsFalso logged in -");
+      });
+
+      it("only user who created the blog can delete it", function () {
+        cy.contains("New Blog").click();
+        cy.get("#title").type("fourth blog");
+        cy.get("#author").type("Jesús Alarcón");
+        cy.get("#url").type("google.com");
+        cy.contains("save").click();
+        cy.contains("a new blog fourth blog by Jesús Alarcón added");
+
+        cy.contains("Log out").click();
+        cy.get("#username").type("root");
+        cy.get("#password").type("root");
+        cy.get("#login-button").click();
+        cy.contains("Jesús logged in -");
+        cy.wait(5000);
+
+        cy.contains("fourth blog").contains("View").click();
+        cy.contains("fourth blog")
+          .parent()
+          .find("button:contains('remove')")
+          .click();
+        cy.contains("unauthorized access");
       });
     });
   });
