@@ -32,7 +32,6 @@ const reducer = (state = initialState, action) => {
         anecdote.id !== id ? anecdote : changedVote
       );
     case "CREATE_ANECDOTE":
-      console.log(action);
       return [...state, action.payload];
 
     default:
